@@ -960,10 +960,10 @@ a:hover { border-bottom-color: var(--accent); }
 /* ====== Radial calendar ====== */
 .radial-calendar {
   width: 100%;
-  /* Tall enough that "peak · Jul" labels (placed directly below centre)
-     don't get clipped by the SVG viewBox; same-month peaks (Iowa &
-     Kansas both Jul this year) stack radially and need extra room. */
-  height: clamp(480px, 60vw, 720px);
+  /* Tall enough that peak labels at outerR + 50 (with same-month
+     entries spread angularly around the month spoke) clear the SVG
+     viewBox at the bottom-most position (peak at July, month 7). */
+  height: clamp(560px, 60vw, 760px);
 }
 .legend-row {
   display: flex;
