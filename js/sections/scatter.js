@@ -5,6 +5,7 @@
 // =========================================================
 import {
   STATES, STATE_COLORS, STATE_COLORS_DARK, STATE_CROP, MONTH_SHORT, MONTH_NAMES,
+  TempUnit,
   showTip, moveTip, hideTip
 } from '../utils.js';
 
@@ -14,8 +15,8 @@ const CHARTS = [
   {
     id: 'scatter-lst',
     xKey: 'LST_Day',
-    xLabel: 'Land Surface Temp — Day (°C)',
-    xFmt: d => d3.format('.0f')(d) + '°',
+    get xLabel() { return `Land Surface Temp — Day (${TempUnit.unitLabel()})`; },
+    xFmt: d => TempUnit.formatAbs(d, 0),
   },
   {
     id: 'scatter-precip',
@@ -50,6 +51,13 @@ export function initScatter(ctx) {
   window.addEventListener('resize', () => {
     clearTimeout(resizeId);
     resizeId = setTimeout(() => renderers.forEach(r => r.rebuild()), 150);
+  });
+
+  // Rebuild on temperature-unit toggle so the LST chart's axis and
+  // tooltips switch to the new unit. The precip chart is also rebuilt
+  // (harmless — its axis doesn't change), keeping both in sync.
+  document.addEventListener('tempunitchange', () => {
+    renderers.forEach(r => r.rebuild());
   });
 }
 

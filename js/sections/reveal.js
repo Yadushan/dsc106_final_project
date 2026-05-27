@@ -212,6 +212,9 @@ export function initReveal(ctx) {
   varSel.addEventListener('change', () => { varKey = varSel.value; update(); });
   monthEl.addEventListener('input', () => { month = +monthEl.value; update(); });
 
+  // Re-render legend ticks + tooltips when the °C/°F toggle fires
+  document.addEventListener('tempunitchange', () => update());
+
   document.addEventListener('mousemove', e => {
     if (document.getElementById('tooltip').classList.contains('visible')) moveTip(e);
   });

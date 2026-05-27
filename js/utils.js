@@ -43,7 +43,70 @@ export const MONTH_SHORT = [
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
 ];
 
-// Variable metadata — used everywhere
+// =========================================================
+//  Temperature-unit toggle — site-wide °C / °F switch
+// =========================================================
+// The colour scales always operate on the underlying Celsius values
+// (so a given colour stays anchored to a given physical temperature).
+// Only the displayed labels — axis ticks, tooltips, captions, inline
+// numbers — convert at render time.
+export const TempUnit = {
+  current: 'C',          // 'C' or 'F'
+
+  set(unit) {
+    if (unit !== 'C' && unit !== 'F') return;
+    if (this.current === unit) return;
+    this.current = unit;
+
+    // Update every inline temperature span in the HTML (Scene captions,
+    // Takeaway cards, etc.). Three flavours:
+    //   <span class="temp"       data-c="27">27 °C</span>   → absolute value
+    //   <span class="temp-delta" data-c="17">17 °C</span>   → temperature difference
+    //   <span class="unit-text">°C</span>                   → bare unit label
+    document.querySelectorAll('.temp[data-c]').forEach(el => {
+      const decimals = el.dataset.decimals !== undefined ? +el.dataset.decimals : undefined;
+      el.textContent = TempUnit.formatAbs(+el.dataset.c, decimals);
+    });
+    document.querySelectorAll('.temp-delta[data-c]').forEach(el => {
+      el.textContent = TempUnit.formatDelta(+el.dataset.c);
+    });
+    document.querySelectorAll('.unit-text').forEach(el => {
+      el.textContent = TempUnit.unitLabel();
+    });
+
+    document.dispatchEvent(new CustomEvent('tempunitchange', { detail: { unit } }));
+  },
+
+  // Convert absolute Celsius → Fahrenheit (with +32 offset)
+  cToF(c) { return c * 9 / 5 + 32; },
+
+  // Format an ABSOLUTE temperature (use this for axis ticks, tooltips, etc.)
+  formatAbs(c, decimals) {
+    if (!Number.isFinite(c)) return '—';
+    if (decimals === undefined) decimals = Math.abs(c) >= 10 ? 0 : 1;
+    if (this.current === 'F') {
+      return TempUnit.cToF(c).toFixed(decimals) + '°F';
+    }
+    return c.toFixed(decimals) + '°C';
+  },
+
+  // Format a TEMPERATURE DIFFERENCE (no +32 offset — 1°C diff = 1.8°F diff)
+  formatDelta(c) {
+    if (!Number.isFinite(c)) return '—';
+    if (this.current === 'F') {
+      return (c * 9 / 5).toFixed(0) + '°F';
+    }
+    return c.toFixed(0) + '°C';
+  },
+
+  // Convenience: label for an LST axis ("°C" or "°F")
+  unitLabel() {
+    return this.current === 'F' ? '°F' : '°C';
+  },
+};
+
+// Variable metadata — used everywhere.
+// fmt is a function, not a string, so re-rendering picks up the current unit.
 export const VARIABLES = {
   NDVI: {
     label: 'Vegetation Index (NDVI)',
@@ -54,18 +117,18 @@ export const VARIABLES = {
     legendStops: [0, 0.2, 0.4, 0.6, 0.8],
   },
   LST_Day: {
-    label: 'Land Surface Temp — Day (°C)',
+    get label() { return `Land Surface Temp — Day (${TempUnit.unitLabel()})`; },
     short: 'LST Day',
-    unit:  '°C',
-    fmt:   d => d3.format('.1f')(d) + '°',
+    get unit() { return TempUnit.unitLabel(); },
+    fmt:   d => TempUnit.formatAbs(d, 1),
     interp: d3.interpolateYlOrRd,
     legendStops: [-5, 5, 15, 25, 35, 45],
   },
   LST_Night: {
-    label: 'Land Surface Temp — Night (°C)',
+    get label() { return `Land Surface Temp — Night (${TempUnit.unitLabel()})`; },
     short: 'LST Night',
-    unit:  '°C',
-    fmt:   d => d3.format('.1f')(d) + '°',
+    get unit() { return TempUnit.unitLabel(); },
+    fmt:   d => TempUnit.formatAbs(d, 1),
     interp: d3.interpolatePuBu,
     legendStops: [-15, -10, -5, 0, 5, 10, 15, 20, 25],
   },

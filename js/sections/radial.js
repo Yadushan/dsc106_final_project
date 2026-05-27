@@ -6,6 +6,7 @@
 // =========================================================
 import {
   STATES, STATE_COLORS, STATE_COLORS_DARK, STATE_CROP, MONTH_SHORT, MONTH_NAMES,
+  TempUnit,
   showTip, moveTip, hideTip
 } from '../utils.js';
 
@@ -118,7 +119,7 @@ export function initRadial(ctx) {
       .attr('font-size', 10)
       .attr('letter-spacing', '0.12em')
       .attr('fill', '#A29B85')
-      .text('YEAR · 2024');
+      .text('YEAR · 2023');
 
     // ---- Draw each state's curve (fills + lines first) ----
     const lineGen = d3.lineRadial()
@@ -219,7 +220,7 @@ export function initRadial(ctx) {
           <div class="tt-title" style="color:${d.color}">${d.state} · ${STATE_CROP[d.state]}</div>
           <div class="tt-row"><span class="lbl">Month</span><span>${MONTH_NAMES[d.month - 1]}</span></div>
           <div class="tt-row"><span class="lbl">NDVI</span><span>${d.NDVI.toFixed(2)}</span></div>
-          <div class="tt-row"><span class="lbl">LST Day</span><span>${d.LST_Day.toFixed(1)}°C</span></div>
+          <div class="tt-row"><span class="lbl">LST Day</span><span>${TempUnit.formatAbs(d.LST_Day, 1)}</span></div>
           <div class="tt-row"><span class="lbl">Precip</span><span>${d.Precipitation.toFixed(0)} mm</span></div>
         `, event);
       })

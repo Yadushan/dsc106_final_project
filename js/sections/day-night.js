@@ -4,7 +4,8 @@
 // =========================================================
 import {
   STATES, STATE_COLORS, STATE_COLORS_DARK, STATE_CROP,
-  MONTH_SHORT, showTip, moveTip, hideTip
+  MONTH_SHORT, TempUnit,
+  showTip, moveTip, hideTip
 } from '../utils.js';
 
 export function initDayNight(ctx) {
@@ -61,7 +62,7 @@ export function initDayNight(ctx) {
       const arr = ctx.index.stateByName.get(s);
       const innerW = panelW - 32;
       const innerH = (cols === 1 ? panelH : h) - 60;
-      const m = { t: 14, r: 12, b: 32, l: 38 };
+      const m = { t: 14, r: 12, b: 32, l: 52 };
 
       const svg = panel.append('svg')
         .attr('viewBox', `0 0 ${innerW} ${innerH}`)
@@ -87,7 +88,7 @@ export function initDayNight(ctx) {
         .attr('text-anchor', 'end')
         .attr('font-family', 'JetBrains Mono, monospace')
         .attr('font-size', 9.5).attr('fill', '#1F4E79').attr('opacity', 0.7)
-        .text('0°C');
+        .text(TempUnit.formatAbs(0, 0));
 
       // gap area (between day and night)
       const area = d3.area()
@@ -145,10 +146,20 @@ export function initDayNight(ctx) {
         .attr('font-size', 9).attr('color', '#8A8A8A')
         .call(g => g.select('.domain').remove());
       svg.append('g').attr('transform', `translate(${m.l},0)`)
-        .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '°C').tickSize(0))
+        .call(d3.axisLeft(y).ticks(5).tickFormat(d => TempUnit.formatAbs(d, 0)).tickSize(0))
         .attr('font-family', 'JetBrains Mono, monospace')
         .attr('font-size', 9.5).attr('color', '#8A8A8A')
         .call(g => g.select('.domain').remove());
+
+      // y-axis title — makes it explicit that this is LST, not air temp
+      svg.append('text')
+        .attr('transform', `translate(14, ${(m.t + innerH - m.b) / 2}) rotate(-90)`)
+        .attr('text-anchor', 'middle')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .attr('font-size', 9)
+        .attr('letter-spacing', '0.06em')
+        .attr('fill', '#8A8A8A')
+        .text(`LAND SURFACE TEMP (${TempUnit.unitLabel()})`);
 
       // annotation: largest gap month
       let maxGap = arr[0], maxGapVal = arr[0].LST_Day - arr[0].LST_Night;
@@ -164,7 +175,7 @@ export function initDayNight(ctx) {
         .attr('font-style', 'italic')
         .attr('font-size', 11).attr('fill', '#1A1A1A')
         .attr('opacity', 0.7)
-        .text(`Δ${maxGapVal.toFixed(0)}°C`);
+        .text('Δ' + TempUnit.formatDelta(maxGapVal));
 
       // interactive vertical guide
       const focus = svg.append('g').style('display', 'none');
@@ -185,9 +196,9 @@ export function initDayNight(ctx) {
           if (!d) return;
           showTip(`
             <div class="tt-title" style="color:${STATE_COLORS_DARK[s]}">${s} · ${MONTH_SHORT[month - 1]}</div>
-            <div class="tt-row"><span class="lbl">Day</span><span>${d.LST_Day.toFixed(1)}°C</span></div>
-            <div class="tt-row"><span class="lbl">Night</span><span>${d.LST_Night.toFixed(1)}°C</span></div>
-            <div class="tt-row"><span class="lbl">Gap</span><span>${(d.LST_Day - d.LST_Night).toFixed(1)}°C</span></div>
+            <div class="tt-row"><span class="lbl">Day LST</span><span>${TempUnit.formatAbs(d.LST_Day, 1)}</span></div>
+            <div class="tt-row"><span class="lbl">Night LST</span><span>${TempUnit.formatAbs(d.LST_Night, 1)}</span></div>
+            <div class="tt-row"><span class="lbl">Gap</span><span>${TempUnit.formatDelta(d.LST_Day - d.LST_Night)}</span></div>
           `, event);
         });
 
@@ -198,8 +209,8 @@ export function initDayNight(ctx) {
         .style('font-size', '0.72rem')
         .style('color', '#8A8A8A')
         .style('margin-top', '0.4rem');
-      lg.append('span').html(`<span style="display:inline-block;width:14px;height:2px;background:${STATE_COLORS_DARK[s]};vertical-align:middle;margin-right:4px"></span>Day`);
-      lg.append('span').html(`<span style="display:inline-block;width:14px;height:2px;border-top:2px dashed #4A6FA5;vertical-align:middle;margin-right:4px"></span>Night`);
+      lg.append('span').html(`<span style="display:inline-block;width:14px;height:2px;background:${STATE_COLORS_DARK[s]};vertical-align:middle;margin-right:4px"></span>LST Day`);
+      lg.append('span').html(`<span style="display:inline-block;width:14px;height:2px;border-top:2px dashed #4A6FA5;vertical-align:middle;margin-right:4px"></span>LST Night`);
     });
 
     document.addEventListener('mousemove', e => {
@@ -214,4 +225,7 @@ export function initDayNight(ctx) {
     clearTimeout(resizeId);
     resizeId = setTimeout(render, 150);
   });
+
+  // Re-render the entire panel when the user toggles °C ↔ °F
+  document.addEventListener('tempunitchange', render);
 }

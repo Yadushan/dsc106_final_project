@@ -53,10 +53,12 @@ npx serve .
 
 ## Data sources
 
-- **NASA MODIS MOD13A3** — monthly NDVI, 1 km (LP DAAC)
-- **NASA MODIS MOD11A2** — 8-day LST Day & Night, 1 km (LP DAAC)
-- **CHIRPS** — monthly precipitation, 5 km (UCSB Climate Hazards Center)
-- **US Census TIGER/Line** — county boundary geometry, served via the [us-atlas](https://github.com/topojson/us-atlas) TopoJSON build (`counties-10m`)
+**Time window:** January 1 – December 31, **2023** (12 monthly composites).
+
+- **NASA MODIS MOD13A2** — 16-day NDVI composites, 1 km, aggregated to monthly means (LP DAAC)
+- **NASA MODIS MOD11A2** — 8-day LST Day & Night, 1 km, aggregated to monthly means (LP DAAC)
+- **CHIRPS Daily** — daily precipitation, 5 km, summed/averaged to monthly totals (UCSB Climate Hazards Center)
+- **US Census TIGER/2018/Counties** — county boundary geometry used both inside Earth Engine for zonal stats and (via the [us-atlas](https://github.com/topojson/us-atlas) `counties-10m` TopoJSON build) for the front-end maps
 - **US Census STATEFP codes** — 2-digit state identifiers (19 = Iowa, 20 = Kansas, 48 = Texas) used to filter counties
 
 All raster bands extracted via **Google Earth Engine** and aggregated to the county level for Iowa (99 counties), Kansas (105 counties), and Texas (254 counties) — 5,496 county-month rows in total.

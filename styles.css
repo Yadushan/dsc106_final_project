@@ -103,6 +103,22 @@ a:hover { border-bottom-color: var(--accent); }
 }
 .lede.light { color: #C7BFAB; }
 
+/* Stakes paragraph — sits between a section's kicker and its display
+   heading, framing the real-world cost of the problem before the
+   rhetorical punchline lands. Accent left border signals "this is the
+   why-care beat", visually distinct from the explanatory lede that
+   follows the heading. */
+.stakes {
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 1.5rem;
+  max-width: 62ch;
+  border-left: 3px solid var(--accent);
+  padding: 0.1rem 0 0.1rem 1.1rem;
+}
+
 .ink-gold { color: var(--iowa-dk); font-style: italic; font-variation-settings: "opsz" 144; }
 .ink-blue { color: var(--accent); font-style: italic; font-variation-settings: "opsz" 144; }
 
@@ -388,6 +404,90 @@ a:hover { border-bottom-color: var(--accent); }
   margin-right: 0.35rem;
 }
 
+/* ====== Prefs callout — master site-wide temperature unit selector.
+   Lives in the Conflict section, just before readers first encounter
+   choropleth controls. Designed to draw attention as an editorial
+   "pick your unit" moment, not a settings cog. ====== */
+.prefs-callout {
+  margin: 2.25rem auto 0;
+  padding: 1.65rem 1.85rem;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F4EEDD 100%);
+  border: 1px solid var(--rule);
+  border-left: 5px solid var(--accent);
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(31, 78, 121, 0.08);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem 1.5rem;
+  align-items: center;
+  max-width: 720px;
+}
+.prefs-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.prefs-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.prefs-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.prefs-question {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.01em;
+}
+.prefs-question em {
+  font-style: italic;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.prefs-hint {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* Larger toggle variant — used only inside the prefs callout to make
+   the choice unmissable. */
+.unit-toggle.large {
+  padding: 5px;
+}
+.unit-toggle.large .unit-btn {
+  padding: 0.65rem 1.15rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* Mobile / narrow viewport: stack callout vertically */
+@media (max-width: 640px) {
+  .prefs-callout {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+  .prefs-callout .unit-toggle.large { justify-self: start; }
+}
+
 /* ====== Reveal grid (state vs county) ====== */
 .reveal-grid {
   display: grid;
@@ -629,6 +729,37 @@ a:hover { border-bottom-color: var(--accent); }
   border-radius: 999px;
   padding: 4px;
   gap: 2px;
+}
+
+/* °C / °F unit toggle — site-wide. Single instance, lives inside
+   the Setup section's prefs-bar. Its effect propagates to every
+   chart and inline temperature number on the page. */
+.unit-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-tint);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 2px;
+}
+.unit-btn {
+  padding: 0.45rem 0.75rem;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-variant-numeric: tabular-nums;
+}
+.unit-btn:hover { color: var(--ink); }
+.unit-btn.active {
+  background: white;
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 .var-btn {
   padding: 0.5rem 1rem;
@@ -973,6 +1104,24 @@ a:hover { border-bottom-color: var(--accent); }
   color: var(--ink);
   font-weight: 600;
 }
+/* Dark-section variant (e.g. Lifecycle radial calendar) — recolour for
+   the navy background so the note still reads as a tidy callout. */
+.section-dark .method-note {
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: #6B6B6B;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4.75rem;
+}
+.section-dark .method-note .note-eyebrow {
+  color: #8C8775;
+}
+.section-dark .method-note p {
+  color: #C7BFAB;
+}
+.section-dark .method-note em {
+  color: #F0E9D9;
+}
 
 /* ====== Day-night ====== */
 .day-night-chart {
@@ -1015,6 +1164,65 @@ a:hover { border-bottom-color: var(--accent); }
   color: var(--ink-soft);
   margin: 0;
   line-height: 1.55;
+}
+
+/* ====== Warning banner — the "one warning" promised in the section
+         heading. Dark ground + Texas-red accent so it reads as the
+         single most urgent piece of the page. ====== */
+.takeaway-warning {
+  margin: 0.5rem 0 3rem;
+  padding: 2.25rem 2.5rem;
+  border-radius: 14px;
+  background: var(--bg-dark);
+  color: #EFE9DD;
+  border-left: 6px solid var(--texas);
+  box-shadow: 0 16px 40px rgba(20,20,20,0.10);
+}
+.warning-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texas);
+  margin-bottom: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.warning-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--texas);
+  color: white;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding-bottom: 1px;
+}
+.takeaway-warning h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  color: #F7F2E4;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+.takeaway-warning p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #C7BFAB;
+  margin: 0;
+  max-width: 78ch;
+}
+.takeaway-warning em {
+  font-style: italic;
+  color: #F0E9D9;
+  font-weight: 500;
 }
 
 /* ====== Process box ====== */
