@@ -9,13 +9,24 @@ import {
   showTip, moveTip, hideTip
 } from '../utils.js';
 
-const MONTH_LETTER = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+// Indices at which the seasonal trajectory shows a direction arrow.
+// 4 arrows per state — one anchored in the middle of each of the four
+// seasons, so the chronological loop reads at a glance:
+//   Jan→Feb (winter)  ·  Apr→May (spring rise)
+//   Jul→Aug (summer post-peak)  ·  Oct→Nov (fall return)
+const ARROW_SEGMENT_INDICES = [0, 3, 6, 9];
 
 const CHARTS = [
   {
     id: 'scatter-lst',
     xKey: 'LST_Day',
     get xLabel() { return `Land Surface Temp — Day (${TempUnit.unitLabel()})`; },
+    xFmt: d => TempUnit.formatAbs(d, 0),
+  },
+  {
+    id: 'scatter-lst-night',
+    xKey: 'LST_Night',
+    get xLabel() { return `Land Surface Temp — Night (${TempUnit.unitLabel()})`; },
     xFmt: d => TempUnit.formatAbs(d, 0),
   },
   {
@@ -63,7 +74,7 @@ export function initScatter(ctx) {
 
 function makeScatter(cfg, ctx) {
   const el = document.getElementById(cfg.id);
-  let svg, gCloud, gTraj, gLink, gTruth, gDots, gAnnot, gAxes, x, y, m;
+  let svg, gCloud, gTraj, gArrows, gLink, gTruth, gDots, gAnnot, gAxes, x, y, m;
   let currentFilter = 'all';
 
   function rebuild(filter = currentFilter) {
@@ -158,11 +169,12 @@ function makeScatter(cfg, ctx) {
         .text(r.label);
     });
 
-    gCloud = svg.append('g').attr('class', 'cloud');
-    gTraj  = svg.append('g').attr('class', 'traj');
-    gLink  = svg.append('g').attr('class', 'link');
-    gTruth = svg.append('g').attr('class', 'truth');   // small dots at exact (x,y)
-    gDots  = svg.append('g').attr('class', 'dots');     // big labelled bubbles (dodged)
+    gCloud  = svg.append('g').attr('class', 'cloud');
+    gTraj   = svg.append('g').attr('class', 'traj');
+    gArrows = svg.append('g').attr('class', 'traj-arrows');  // direction markers
+    gLink   = svg.append('g').attr('class', 'link');
+    gTruth  = svg.append('g').attr('class', 'truth');   // small dots at exact (x,y)
+    gDots   = svg.append('g').attr('class', 'dots');     // big labelled bubbles
 
     update(currentFilter);
   }
@@ -207,10 +219,15 @@ function makeScatter(cfg, ctx) {
       return { state: s, points: arr };
     });
 
+    // Linear segments — keeps the trajectory honest (each segment is the
+    // straight monthly transition between two real data points) AND
+    // guarantees the direction arrows we draw at segment midpoints sit
+    // exactly on the line. Catmull-Rom smoothing made arrows float off
+    // the curve in tightly bent regions like Iowa's July inflection.
     const lineGen = d3.line()
       .x(d => x(d[cfg.xKey]))
       .y(d => y(d.NDVI))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      .curve(d3.curveLinear);
 
     gTraj.selectAll('path.traj-line')
       .data(trajData, d => d.state)
@@ -219,18 +236,45 @@ function makeScatter(cfg, ctx) {
           .attr('class', 'traj-line')
           .attr('fill', 'none')
           .attr('stroke', d => STATE_COLORS[d.state])
-          .attr('stroke-width', 1.6)
+          .attr('stroke-width', 1.2)              // thinner — softer skeleton
           .attr('stroke-opacity', 0)
           .attr('stroke-linecap', 'round')
           .attr('stroke-linejoin', 'round')
           .attr('d', d => lineGen(d.points))
-          .call(en => en.transition().duration(450).attr('stroke-opacity', 0.55)),
+          .call(en => en.transition().duration(450).attr('stroke-opacity', 0.35)),
         update => update.transition().duration(380)
           .attr('stroke', d => STATE_COLORS[d.state])
           .attr('d', d => lineGen(d.points))
-          .attr('stroke-opacity', 0.55),
+          .attr('stroke-opacity', 0.35),
         exit => exit.transition().duration(200).attr('stroke-opacity', 0).remove()
       );
+
+    // ---- Direction arrows along trajectory ----
+    // Small filled triangles pointing FROM the earlier month TO the next,
+    // placed midway between selected month pairs. Makes the seasonal
+    // clockwise / counter-clockwise direction unambiguous (per TA feedback).
+    gArrows.selectAll('*').remove();
+    trajData.forEach(t => {
+      const pts = t.points;
+      ARROW_SEGMENT_INDICES.forEach(i => {
+        const a = pts[i];
+        const b = pts[(i + 1) % pts.length];
+        const ax = x(a[cfg.xKey]), ay = y(a.NDVI);
+        const bx = x(b[cfg.xKey]), by = y(b.NDVI);
+        if (!Number.isFinite(ax) || !Number.isFinite(bx)) return;
+        const mx = (ax + bx) / 2;
+        const my = (ay + by) / 2;
+        const angle = Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
+
+        gArrows.append('path')
+          .attr('class', 'traj-arrow')
+          .attr('d', 'M -3.5,-2.5 L 3,0 L -3.5,2.5 Z')  // smaller triangle
+          .attr('transform', `translate(${mx}, ${my}) rotate(${angle})`)
+          .attr('fill', STATE_COLORS_DARK[t.state])
+          .attr('fill-opacity', 0)
+          .call(sel => sel.transition().duration(450).attr('fill-opacity', 0.85));
+      });
+    });
 
     // ---- Foreground: state-level dots placed at EXACT (x, y) ----
     // No dodging, no displacement, no leader lines. Each labelled bubble
@@ -278,10 +322,13 @@ function makeScatter(cfg, ctx) {
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
       .attr('font-family', 'JetBrains Mono, monospace')
-      .attr('font-size', 9.5).attr('font-weight', 700)
+      // Two-digit months (10, 11, 12) need a slightly smaller size
+      // to stay legibly inside the 8 px-radius dot.
+      .attr('font-size', d => d.month >= 10 ? 8 : 9.5)
+      .attr('font-weight', 700)
       .attr('fill', 'white')
       .attr('pointer-events', 'none')
-      .text(d => MONTH_LETTER[d.month - 1]);
+      .text(d => d.month);
 
     ent.attr('transform', d => `translate(${x(d[cfg.xKey])}, ${y(d.NDVI)})`);
 

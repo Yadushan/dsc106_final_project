@@ -84,42 +84,10 @@
 
     <div class="container wide">
       <div id="intro-map" class="intro-map"></div>
-    </div>
-
-    <div class="container narrow">
-      <div class="state-cards">
-        <article class="state-card iowa">
-          <div class="crop-icon" data-crop="corn"></div>
-          <h3>Iowa</h3>
-          <p class="crop-name">Corn</p>
-          <ul class="state-stats">
-            <li><span>99</span> counties</li>
-            <li><span>Warm-season</span> crop</li>
-            <li>Peak NDVI in <span>July</span></li>
-          </ul>
-        </article>
-        <article class="state-card kansas">
-          <div class="crop-icon" data-crop="wheat"></div>
-          <h3>Kansas</h3>
-          <p class="crop-name">Winter Wheat</p>
-          <ul class="state-stats">
-            <li><span>105</span> counties</li>
-            <li><span>Cool-season</span> crop</li>
-            <li>Peak NDVI in <span>July</span></li>
-          </ul>
-        </article>
-        <article class="state-card texas">
-          <div class="crop-icon" data-crop="cotton"></div>
-          <h3>Texas</h3>
-          <p class="crop-name">Cotton</p>
-          <ul class="state-stats">
-            <li><span>254</span> counties</li>
-            <li><span>Heat-loving</span> crop</li>
-            <li>Peak NDVI in <span>May</span></li>
-          </ul>
-        </article>
-      </div>
-
+      <p class="map-hint" aria-hidden="true">
+        <span class="map-hint-dot"></span>
+        Hover any <strong>highlighted state</strong> to reveal its crop story.
+      </p>
     </div>
   </section>
 
@@ -173,22 +141,18 @@
     </div>
 
     <div class="container wide">
-      <div class="reveal-grid">
-        <figure class="reveal-card">
-          <figcaption>
-            <h4>The State View</h4>
-            <p>One number per state. Easy to read, easy to misread.</p>
-          </figcaption>
-          <div id="state-choropleth" class="map-frame"></div>
-        </figure>
-        <figure class="reveal-card highlight">
-          <figcaption>
-            <h4>The County View</h4>
-            <p>458 counties, each with its own climate fingerprint.</p>
-          </figcaption>
-          <div id="county-choropleth-preview" class="map-frame"></div>
-        </figure>
-      </div>
+      <figure class="reveal-card reveal-spotlight">
+        <figcaption>
+          <h4>Inside the average</h4>
+          <p>
+            The big number floating over each state is what most dashboards
+            report — the simple story. The colored texture beneath is what
+            458 counties actually see. <strong>Hover any county</strong>
+            to read its exact gap from that reported state mean.
+          </p>
+        </figcaption>
+        <div id="county-choropleth-preview" class="map-frame"></div>
+      </figure>
       <div class="reveal-control">
         <label for="reveal-var">Variable:</label>
         <select id="reveal-var">
@@ -367,9 +331,14 @@
 
       <div class="scatter-grid">
         <figure class="scatter-card">
-          <h4>Temperature vs Vegetation</h4>
+          <h4>LST Day Temperature vs Vegetation</h4>
           <p class="figure-sub">Land Surface Temp — Day (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
           <div id="scatter-lst" class="scatter-frame"></div>
+        </figure>
+        <figure class="scatter-card">
+          <h4>LST Night Temperature vs Vegetation</h4>
+          <p class="figure-sub">Land Surface Temp — Night (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis · day-and-night LST are highly correlated, so the cluster echoes the chart above — but the subtle shift hints at why nights matter</p>
+          <div id="scatter-lst-night" class="scatter-frame"></div>
         </figure>
         <figure class="scatter-card">
           <h4>Rainfall vs Vegetation</h4>

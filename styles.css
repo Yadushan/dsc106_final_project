@@ -327,8 +327,50 @@ a:hover { border-bottom-color: var(--accent); }
 /* ====== Intro map ====== */
 .intro-map {
   width: 100%;
-  height: clamp(380px, 50vw, 560px);
-  margin: 1rem 0 2rem;
+  /* Slightly taller now to give hover callouts room outside the
+     state geometry. */
+  height: clamp(440px, 56vw, 640px);
+  margin: 1rem 0 0.5rem;
+}
+
+/* The animated hover callouts emerge from each highlighted state.
+   Pointer-events stay off on the layer so they never block hovering
+   the underlying focus-state polygons. */
+.intro-map .focus-state {
+  transition: fill-opacity 200ms ease, stroke-width 200ms ease;
+}
+.intro-map .focus-state:hover {
+  fill-opacity: 0.78;
+  stroke-width: 2;
+}
+
+/* Small mono-style hint pinned under the map */
+.map-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+  margin: 0 0 2.5rem;
+}
+.map-hint strong {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.map-hint-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.55; }
+  50%      { transform: scale(1.4); opacity: 1; }
 }
 
 /* ====== State cards ====== */
@@ -488,44 +530,45 @@ a:hover { border-bottom-color: var(--accent); }
   .prefs-callout .unit-toggle.large { justify-self: start; }
 }
 
-/* ====== Reveal grid (state vs county) ====== */
-.reveal-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin: 1rem 0 2rem;
-}
-@media (max-width: 720px) {
-  .reveal-grid { grid-template-columns: 1fr; }
-}
+/* ====== Reveal spotlight (single full-width County View) ====== */
 .reveal-card {
-  margin: 0;
+  margin: 1rem 0 2rem;
   background: white;
   border: 1px solid var(--rule);
   border-radius: 14px;
-  padding: 1.5rem;
+  padding: 1.75rem 2rem;
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
-.reveal-card.highlight {
-  background: white;
+.reveal-spotlight {
   border-color: var(--accent);
-  box-shadow: 0 12px 32px rgba(31,78,121,0.12);
+  box-shadow: 0 14px 36px rgba(31, 78, 121, 0.10);
 }
-.reveal-card figcaption { margin-bottom: 0.75rem; }
+.reveal-card figcaption {
+  margin-bottom: 1rem;
+  max-width: 70ch;
+}
 .reveal-card h4 {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+  margin: 0 0 0.4rem;
   font-weight: 600;
+  letter-spacing: -0.005em;
 }
 .reveal-card figcaption p {
-  font-size: 0.92rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
   color: var(--ink-soft);
   margin: 0;
 }
+.reveal-card figcaption strong {
+  color: var(--ink);
+  font-weight: 600;
+}
 .map-frame {
   width: 100%;
-  height: clamp(320px, 38vw, 440px);
+  /* Single full-width map deserves more vertical room than the old
+     side-by-side panes — the state-mean labels need space to breathe. */
+  height: clamp(440px, 50vw, 600px);
 }
 
 .reveal-control {
@@ -887,9 +930,24 @@ a:hover { border-bottom-color: var(--accent); }
   background: var(--bg-tint);
   border-radius: 12px;
   padding: 1rem 1.25rem;
-  min-height: 110px;
+  /* Locked to a single height that fits the sparkline + meta column.
+     Stops the sticky shell from reflowing every time the user moves
+     between counties — which on small viewports causes the cursor's
+     viewport position to shift, firing mouseleave/enter in a loop
+     ("hover jitter"). Placeholder text floats centred in the empty
+     space; populated content fits comfortably. */
+  height: 178px;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
+}
+/* Inner content also pinned so the grid layout doesn't reflow */
+.hover-content {
+  height: 100%;
+  align-content: center;
+}
+.hover-spark {
+  height: 110px;
 }
 .hover-placeholder {
   font-family: var(--font-mono);
@@ -1356,6 +1414,19 @@ a:hover { border-bottom-color: var(--accent); }
   font-size: 0.74rem;
 }
 .tooltip .tt-row .lbl { color: rgba(255,255,255,0.6); }
+.tooltip .tt-gap-strong {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #FFD17A;            /* warm highlight when a county is far from its state mean */
+  margin-top: 0.15rem;
+  padding-top: 0.25rem;
+  border-top: 1px dashed rgba(255,255,255,0.18);
+}
+.tooltip .tt-gap-strong .lbl { color: rgba(255,209,122,0.72); }
 
 /* ====== Loading shimmer ====== */
 .loading-shimmer {
