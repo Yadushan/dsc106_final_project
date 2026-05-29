@@ -299,7 +299,22 @@ export function initReveal(ctx) {
   }
 
   // ---------- Wiring ----------
-  varSel.addEventListener('change', () => { varKey = varSel.value; update(); });
+  // Hide whichever variable is currently selected from the dropdown
+  // list — the active variable already appears as the select's
+  // displayed value, so re-listing it just adds noise. The dropdown
+  // always offers the OTHER three options to switch to.
+  function syncVarOptions() {
+    Array.from(varSel.options).forEach(opt => {
+      opt.hidden = (opt.value === varSel.value);
+    });
+  }
+  syncVarOptions();
+
+  varSel.addEventListener('change', () => {
+    varKey = varSel.value;
+    syncVarOptions();
+    update();
+  });
   monthEl.addEventListener('input', () => { month = +monthEl.value; update(); });
   document.addEventListener('tempunitchange', () => update());
 

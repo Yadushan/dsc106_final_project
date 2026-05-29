@@ -8,14 +8,17 @@ import {
 // Per-state callout content + direction the card extends from the
 // state centroid (in SVG units). Offsets are CLAMPED at runtime so
 // the card never overflows the SVG viewBox.
+// Each stat is [lead, strong, trail] — only the middle slot is rendered
+// in bold ink. Lets us put the emphasised word at the start ("99 counties")
+// OR at the end ("Peak NDVI in July") with the same data shape.
 const STATE_CARD_INFO = {
   Iowa: {
     cropFull: 'Corn',
     icon: '🌽',
     stats: [
-      ['99', 'counties'],
-      ['Warm-season', 'crop'],
-      ['Peak NDVI in', 'July'],
+      ['', '99', ' counties'],
+      ['', 'Warm-season', ' crop'],
+      ['Peak NDVI in ', 'July', ''],
     ],
     offset: [190, -110],
   },
@@ -23,9 +26,9 @@ const STATE_CARD_INFO = {
     cropFull: 'Winter Wheat',
     icon: '🌾',
     stats: [
-      ['105', 'counties'],
-      ['Cool-season', 'crop'],
-      ['Peak NDVI in', 'July'],
+      ['', '105', ' counties'],
+      ['', 'Cool-season', ' crop'],
+      ['Peak NDVI in ', 'July', ''],
     ],
     offset: [-220, 30],
   },
@@ -33,9 +36,9 @@ const STATE_CARD_INFO = {
     cropFull: 'Cotton',
     icon: '☁️',
     stats: [
-      ['254', 'counties'],
-      ['Heat-loving', 'crop'],
-      ['Peak NDVI in', 'May'],
+      ['', '254', ' counties'],
+      ['', 'Heat-loving', ' crop'],
+      ['Peak NDVI in ', 'May', ''],
     ],
     offset: [220, 80],
   },
@@ -259,19 +262,20 @@ export function initIntroMap(ctx) {
       );
       lineY += 18;
 
-      // Stat lines
-      info.stats.forEach(([emph, rest]) => {
+      // Stat lines — [lead, strong, trail] tuple. Middle slot rendered bold.
+      info.stats.forEach(([lead, strong, trail]) => {
         const stat = card.append('text')
           .attr('x', contentX).attr('y', lineY)
           .attr('font-family', 'Inter, sans-serif')
           .attr('font-size', 13)
           .attr('fill', '#4A4A4A')
           .style('opacity', 0);
+        if (lead) stat.append('tspan').text(lead);
         stat.append('tspan')
           .attr('fill', '#1A1A1A')
           .attr('font-weight', 600)
-          .text(emph);
-        stat.append('tspan').text(' ' + rest);
+          .text(strong);
+        if (trail) stat.append('tspan').text(trail);
         contentEls.push(stat);
         lineY += 20;
       });

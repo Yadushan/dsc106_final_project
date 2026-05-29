@@ -156,7 +156,7 @@
       <div class="reveal-control">
         <label for="reveal-var">Variable:</label>
         <select id="reveal-var">
-          <option value="NDVI">Vegetation Index (NDVI)</option>
+          <option value="NDVI" selected>Vegetation Index (NDVI)</option>
           <option value="LST_Day">Land Surface Temp — Day</option>
           <option value="LST_Night">Land Surface Temp — Night</option>
           <option value="Precipitation">Precipitation (mm)</option>
@@ -322,50 +322,38 @@
     </div>
 
     <div class="container wide">
-      <div class="state-filter" id="scatter-filter" role="tablist">
-        <button class="filter-btn active" data-state="all" role="tab">All States</button>
-        <button class="filter-btn" data-state="Iowa" role="tab">Iowa (Corn)</button>
-        <button class="filter-btn" data-state="Kansas" role="tab">Kansas (Wheat)</button>
-        <button class="filter-btn" data-state="Texas" role="tab">Texas (Cotton)</button>
+      <div class="scatter-controls">
+        <div class="scatter-toprow">
+          <span class="control-eyebrow">Filtered by</span>
+          <div class="state-filter" id="scatter-filter" role="tablist" aria-label="State filter">
+            <button class="filter-btn active" data-state="all" role="tab">All States</button>
+            <button class="filter-btn" data-state="Iowa" role="tab">Iowa (Corn)</button>
+            <button class="filter-btn" data-state="Kansas" role="tab">Kansas (Wheat)</button>
+            <button class="filter-btn" data-state="Texas" role="tab">Texas (Cotton)</button>
+          </div>
+        </div>
+
+        <div class="scatter-subtabs">
+          <span class="control-eyebrow">Plotted against</span>
+          <div class="scatter-var-toggle" id="scatter-var-toggle" role="tablist" aria-label="Climate variable">
+            <button class="scatter-var-btn active" data-var="LST_Day" role="tab">LST Day</button>
+            <button class="scatter-var-btn" data-var="LST_Night" role="tab">LST Night</button>
+            <button class="scatter-var-btn" data-var="Precipitation" role="tab">Precipitation</button>
+          </div>
+        </div>
       </div>
 
-      <div class="scatter-grid">
-        <figure class="scatter-card">
-          <h4>LST Day Temperature vs Vegetation</h4>
-          <p class="figure-sub">Land Surface Temp — Day (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
-          <p class="figure-note">
-            Texas runs hottest every month — yet Iowa's more moderate
-            daytime soil temperatures push NDVI the highest.
-            <strong>Pure heat doesn't decide greenness; crop choice and
-            moisture set the ceiling.</strong>
-          </p>
-          <div id="scatter-lst" class="scatter-frame"></div>
-        </figure>
-
-        <figure class="scatter-card">
-          <h4>LST Night Temperature vs Vegetation</h4>
-          <p class="figure-sub">Land Surface Temp — Night (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
-          <p class="figure-note">
-            Day and Night LST track each other tightly across counties —
-            yet plot Night against NDVI and the cluster grows visibly
-            tighter.
-            <strong>Plants feel the night more than they feel the day.</strong>
-          </p>
-          <div id="scatter-lst-night" class="scatter-frame"></div>
-        </figure>
-
-        <figure class="scatter-card">
-          <h4>Rainfall vs Vegetation</h4>
-          <p class="figure-sub">Precipitation (mm) on x-axis · NDVI on y-axis</p>
-          <p class="figure-note">
-            Iowa never breaks 85 mm in any month — yet its peak NDVI
-            tops both Kansas and Texas, which each pour past 110 mm in
-            their wettest month and still never catch up.
-            <strong>Crop type, not water volume, sets the ceiling.</strong>
-          </p>
-          <div id="scatter-precip" class="scatter-frame"></div>
-        </figure>
-      </div>
+      <figure class="scatter-card scatter-card-single">
+        <h4 id="scatter-title">LST Day Temperature vs Vegetation</h4>
+        <p class="figure-sub" id="scatter-sub">Land Surface Temp — Day (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
+        <p class="figure-note" id="scatter-note">
+          Texas runs hottest every month — yet Iowa's more moderate
+          daytime soil temperatures push NDVI the highest.
+          <strong>Pure heat doesn't decide greenness; crop choice and
+          moisture set the ceiling.</strong>
+        </p>
+        <div id="scatter-main" class="scatter-frame"></div>
+      </figure>
 
       <aside class="method-note">
         <span class="note-eyebrow">A note on overlapping dots</span>

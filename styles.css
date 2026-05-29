@@ -1114,6 +1114,124 @@ a:hover { border-bottom-color: var(--accent); }
   border-radius: 14px;
   padding: 1.5rem;
 }
+
+/* Stacked controls — state filter (primary) above climate-variable
+   sub-tabs (secondary). `align-items: flex-start` so each row hugs
+   its content instead of stretching across the full container — the
+   pills then sit at their natural widths and the empty right gutter
+   disappears. */
+.scatter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  align-items: flex-start;
+}
+
+/* Both rows share label-then-pill flex layout. Shared min-width on
+   the eyebrow lines up the two pills under each other so the row
+   structure reads as a single labeled rhythm rather than two
+   independent strips. */
+.scatter-toprow,
+.scatter-subtabs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Sub-tab row — slightly indented with an L-shaped connector tucked
+   in to imply "this drills further into whatever the state filter
+   has selected". */
+.scatter-subtabs {
+  padding-left: 1.5rem;
+  position: relative;
+  animation: subtab-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.scatter-subtabs::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: -0.35rem;
+  width: 0.7rem;
+  height: 1.1rem;
+  border-left: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule);
+  border-bottom-left-radius: 6px;
+  opacity: 0.7;
+}
+
+/* Shared eyebrow label — small uppercase mono caption that prefixes
+   each control row. min-width aligns the pills under each other. */
+.control-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  min-width: 8.5rem;
+}
+
+/* state-filter's stand-alone margin-bottom would otherwise add extra
+   space inside the new control stack — neutralise it here. */
+.scatter-controls .state-filter {
+  margin-bottom: 0;
+}
+
+@keyframes subtab-rise {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Variable sub-tab pill — visually a quieter, smaller cousin of the
+   state filter pill. Same shape language, scaled down to read as
+   secondary. */
+.scatter-var-toggle {
+  display: inline-flex;
+  background: var(--bg-tint);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.scatter-var-btn {
+  padding: 0.38rem 0.9rem;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease;
+}
+.scatter-var-btn:hover { color: var(--ink); }
+.scatter-var-btn.active {
+  background: white;
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transform: scale(1.04);
+}
+
+/* Variable-switch fade — chrome and chart frame briefly dim & nudge
+   down so the swap reads as a deliberate transition, not a jump cut.
+   D3 then handles the actual axis / dot animation on rebuild. */
+.scatter-card-single h4,
+.scatter-card-single .figure-sub,
+.scatter-card-single .figure-note,
+.scatter-card-single .scatter-frame {
+  transition: opacity 220ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scatter-card-single.var-switching h4,
+.scatter-card-single.var-switching .figure-sub,
+.scatter-card-single.var-switching .figure-note,
+.scatter-card-single.var-switching .scatter-frame {
+  opacity: 0;
+  transform: translateY(6px);
+}
 .scatter-card h4 {
   font-family: var(--font-display);
   font-size: 1.15rem;
@@ -1144,8 +1262,10 @@ a:hover { border-bottom-color: var(--accent); }
 }
 .scatter-frame {
   width: 100%;
-  /* now that charts are stacked full-width, taller is also affordable */
-  height: clamp(500px, 44vw, 620px);
+  /* Fixed height — the variable-tab switch shouldn't reflow the
+     chart's vertical footprint, and a stable size also prevents
+     subtle jitter on small viewport-width changes. */
+  height: 600px;
 }
 
 /* Methodology note — subtle, sits below the two scatter charts. Signals
