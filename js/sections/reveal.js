@@ -12,7 +12,7 @@ import {
   STATES, STATE_FP, FP_TO_STATE, STATE_COLORS_DARK,
   VARIABLES, MONTH_NAMES,
   TempUnit,
-  colorScaleFor, globalExtent, adaptiveStroke, textOnBg,
+  colorScaleFor, globalExtent, adaptiveStroke,
   showTip, moveTip, hideTip
 } from '../utils.js';
 
@@ -147,14 +147,13 @@ export function initReveal(ctx) {
       })
       .on('mouseleave', hideTip);
 
-    // ----- State-mean labels -----
+    // ----- State-mean labels OUTSIDE each state -----
     //
-    // Desktop: labels float OUTSIDE each state's left edge, connected back
-    // by a dashed leader + arrowhead.
-    // Mobile (≤ 720 px): we don't have horizontal room for off-state
-    // labels, so we collapse them back to the state centroid with a
-    // light halo for legibility on the county fill.
-    const isMobile = window.innerWidth <= 720;
+    // The "headline" number is the same idea as before — what an average-
+    // only dashboard would report — but now lifted out of the choropleth
+    // and parked in the left margin, with a faint dashed leader pointing
+    // back to each state's centroid. This frees the entire county texture
+    // for unobstructed hover and reading.
     render.gLabels.selectAll('*').remove();
     STATES.forEach(s => {
       const f = ctx.geo.stateOutlines[s];
@@ -162,37 +161,6 @@ export function initReveal(ctx) {
       const bbox = render.path.bounds(f);    // [[x0,y0],[x1,y1]]
       const mean = stateValues.get(s);
       const stateColor = STATE_COLORS_DARK[s];
-
-      // ---------- MOBILE FALLBACK: in-state label, no leader ----------
-      if (isMobile) {
-        const bgFill = mean == null ? '#DDD6C7' : color(mean);
-        const t = textOnBg ? textOnBg(bgFill) : { fill: '#1A1A1A', stroke: 'rgba(255,255,255,0.85)' };
-        const group = render.gLabels.append('g')
-          .attr('transform', `translate(${cx}, ${cy})`);
-        group.append('text')
-          .attr('text-anchor', 'middle')
-          .attr('font-family', 'Fraunces, Georgia, serif')
-          .attr('font-size', 14)
-          .attr('font-weight', 600)
-          .attr('fill', t.fill)
-          .attr('stroke', t.stroke)
-          .attr('stroke-width', 3)
-          .attr('paint-order', 'stroke')
-          .attr('y', -4)
-          .text(s);
-        group.append('text')
-          .attr('text-anchor', 'middle')
-          .attr('font-family', 'JetBrains Mono, monospace')
-          .attr('font-size', 16)
-          .attr('font-weight', 500)
-          .attr('fill', t.fill)
-          .attr('stroke', t.stroke)
-          .attr('stroke-width', 3)
-          .attr('paint-order', 'stroke')
-          .attr('y', 14)
-          .text(mean == null ? '—' : v.fmt(mean));
-        return;   // skip desktop leader + arrow rendering for this state
-      }
 
       // Anchor label 28px to the LEFT of the state's left edge so the
       // map area itself stays clean. Vertical position tracks the state
