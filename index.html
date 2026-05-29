@@ -33,8 +33,7 @@
         Beyond the <span class="ink-blue">State&nbsp;Average</span>
       </h1>
       <p class="hero-sub">
-        What state averages hide, satellite imagery reveals.
-        A county-by-county look at the climate stress shaping
+        A county-by-county look, revealed by satellite imagery, of the climate stress shaping
         <span class="state-tag iowa">Iowa</span>'s corn,
         <span class="state-tag kansas">Kansas</span>'s wheat, and
         <span class="state-tag texas">Texas</span>'s cotton.
@@ -73,12 +72,12 @@
   <section id="setup" class="section">
     <div class="container narrow">
       <p class="kicker">The Setup</p>
-      <h2 class="display">Three states feed a nation.</h2>
+      <h2 class="display">Three states fuel a nation.</h2>
       <p class="lede">
-        Iowa grows the corn in your tortilla chips. Kansas grows the wheat in your bread.
-        Texas grows the cotton in your t-shirt. Together, they form the
-        engine room of American agriculture — and they are exquisitely sensitive
-        to climate.
+        The backbone of a country is its agriculture. The United States, in particular, has some states responsible for a large part of it. 
+        Iowa, Kansas, and Texas grow the corn in your tortilla chips, the wheat in your bread, and the cotton in your t-shirt. 
+        Together, they form the engine that fuels American agriculture. 
+        However, each state's agriculture is largely affected by the climate in which they grow.
       </p>
     </div>
 
@@ -97,19 +96,17 @@
       <p class="kicker">The Conflict</p>
 
       <p class="stakes">
-        Commodity traders read satellite NDVI like a stock ticker. USDA
-        economists use it to flag harvest shortfalls months before any bag
-        of cereal gets a new price tag. The same averaging blind spot that
-        hides a county's drought also distorts every forecast built on top
-        of it.
+        This climate information is extremely important. The turnout of produce affects the price at which it can be sold, 
+        and traders in the industry have to constantly keep track of the satellite NDVI to keep up. However, having the same average across the state,
+        is problematic because the entire state does not have the exact same climate, and by grouping the entire region as if it did, leads to an inaccurate
+        estimate of what the produce should cost.
       </p>
 
-      <h2 class="display">But state averages tell a comforting fiction.</h2>
+      <h2 class="display">The problem with the state average</h2>
       <p class="lede">
-        When you paint an entire state a single shade of green, you erase the
-        real story. Western Kansas is a desert. Eastern Kansas is humid. A single
-        number cannot describe both — yet that is exactly what most climate
-        dashboards show you.
+        Encompassing the entire state with one number is not accurate to the real climate of a state.
+        Western Kansas is a desert, while Eastern Kansas is humid. Despite this, most climate dashboards will represent this with a single number
+        that ends up not being indicative of the real story.
       </p>
 
       <!-- Master °C / °F preference — placed here, where readers first
@@ -129,8 +126,7 @@
           <h3 class="prefs-question">Read temperatures in <em>°C</em> or <em>°F</em>?</h3>
           <p class="prefs-hint">
             Every choropleth tick, axis label, tooltip, and inline number
-            will switch in place — choose whichever feels
-            more native to you, and the data follows.
+            will switch in place depending on your preference.
           </p>
         </div>
         <div class="unit-toggle large" role="group" aria-label="Temperature unit (site-wide)">
@@ -145,10 +141,10 @@
         <figcaption>
           <h4>Inside the average</h4>
           <p>
-            The big number floating over each state is what most dashboards
-            report — the simple story. The colored texture beneath is what
-            458 counties actually see. <strong>Hover any county</strong>
-            to read its exact gap from that reported state mean.
+            The big number beside each state is what is typically reported by most dashboards. 
+            The colored texture across the state is the actual climate across
+            458 counties. <strong>Hover over any county</strong>
+            to read the differene from the reported state mean.
           </p>
         </figcaption>
         <div id="county-choropleth-preview" class="map-frame"></div>
@@ -156,7 +152,7 @@
       <div class="reveal-control">
         <label for="reveal-var">Variable:</label>
         <select id="reveal-var">
-          <option value="NDVI" selected>Vegetation Index (NDVI)</option>
+          <option value="NDVI">Vegetation Index (NDVI)</option>
           <option value="LST_Day">Land Surface Temp — Day</option>
           <option value="LST_Night">Land Surface Temp — Night</option>
           <option value="Precipitation">Precipitation (mm)</option>
@@ -173,8 +169,8 @@
       <p class="kicker">The Resolution · Our flagship tool</p>
       <h2 class="display">A <span class="ink-blue">time machine</span> for America's farms.</h2>
       <p class="lede">
-        Scroll through seven moments of the agricultural year — then drive the
-        machine yourself. Hover any county to see its entire 12-month story
+        Scroll through seven moments of the agricultural year or drive the
+        visualization yourself. Hover over any county to see its entire 12-month story
         unfold in the panel below.
       </p>
     </div>
@@ -190,7 +186,7 @@
               <span id="cap-eyebrow">January</span>
             </div>
             <h3 id="cap-title">The world is asleep.</h3>
-            <p  id="cap-body">In winter, the land is dormant across all three states. NDVI hovers near zero everywhere — there is nothing growing to see. But how each state begins its year already hints at the story to come.</p>
+            <p  id="cap-body">In winter, the land is dormant across all three states. NDVI hovers near zero everywhere.</p>
           </header>
 
           <div class="tm-controls">
@@ -274,7 +270,7 @@
         Read the year clockwise from January. The further the line from center,
         the greener the land. Iowa explodes upward as corn matures in July,
         Kansas climbs steadily and stays high through summer, while Texas
-        peaks early in May and then dips as the brutal heat sets in.
+        peaks early in May and then dips as the climate gets warmer.
       </p>
     </div>
 
@@ -298,10 +294,10 @@
       <aside class="method-note">
         <span class="note-eyebrow">A note on overlapping rings</span>
         <p>
-          Each ring traces one state's monthly NDVI at its exact value — no
-          smoothing or offsetting. Where two rings <em>run close together</em>,
-          the states genuinely reached similar greenness that month. That
-          proximity is itself the signal, not noise. Hover any dot to read
+          Each ring traces one state's monthly NDVI at its exact value. 
+          In places where two rings <em>run close together</em>,
+          we can see the states reached similar greenness that month.
+          Hover any dot to read
           its exact NDVI.
         </p>
       </aside>
@@ -315,54 +311,63 @@
       <h2 class="display">Heat and rain do not love crops equally.</h2>
       <p class="lede">
         Each dot is one state in one month. The line connecting points is an indicator 
-        of time sequence from January to December. Watch what happens when you isolate
-        a single crop — the universal-looking relationship between climate and
-        vegetation fractures into three very different stories.
+        of time sequence from January to December. By observing what happens when we isolate
+        a single crop, we begin to see three very different stories of the relationship between climate and vegetation.
       </p>
     </div>
 
     <div class="container wide">
-      <div class="scatter-controls">
-        <div class="scatter-toprow">
-          <span class="control-eyebrow">Filtered by</span>
-          <div class="state-filter" id="scatter-filter" role="tablist" aria-label="State filter">
-            <button class="filter-btn active" data-state="all" role="tab">All States</button>
-            <button class="filter-btn" data-state="Iowa" role="tab">Iowa (Corn)</button>
-            <button class="filter-btn" data-state="Kansas" role="tab">Kansas (Wheat)</button>
-            <button class="filter-btn" data-state="Texas" role="tab">Texas (Cotton)</button>
-          </div>
-        </div>
-
-        <div class="scatter-subtabs">
-          <span class="control-eyebrow">Plotted against</span>
-          <div class="scatter-var-toggle" id="scatter-var-toggle" role="tablist" aria-label="Climate variable">
-            <button class="scatter-var-btn active" data-var="LST_Day" role="tab">LST Day</button>
-            <button class="scatter-var-btn" data-var="LST_Night" role="tab">LST Night</button>
-            <button class="scatter-var-btn" data-var="Precipitation" role="tab">Precipitation</button>
-          </div>
-        </div>
+      <div class="state-filter" id="scatter-filter" role="tablist">
+        <button class="filter-btn active" data-state="all" role="tab">All States</button>
+        <button class="filter-btn" data-state="Iowa" role="tab">Iowa (Corn)</button>
+        <button class="filter-btn" data-state="Kansas" role="tab">Kansas (Wheat)</button>
+        <button class="filter-btn" data-state="Texas" role="tab">Texas (Cotton)</button>
       </div>
 
-      <figure class="scatter-card scatter-card-single">
-        <h4 id="scatter-title">LST Day Temperature vs Vegetation</h4>
-        <p class="figure-sub" id="scatter-sub">Land Surface Temp — Day (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
-        <p class="figure-note" id="scatter-note">
-          Texas runs hottest every month — yet Iowa's more moderate
-          daytime soil temperatures push NDVI the highest.
-          <strong>Pure heat doesn't decide greenness; crop choice and
-          moisture set the ceiling.</strong>
-        </p>
-        <div id="scatter-main" class="scatter-frame"></div>
-      </figure>
+      <div class="scatter-grid">
+        <figure class="scatter-card">
+          <h4>LST Day Temperature vs Vegetation</h4>
+          <p class="figure-sub">Land Surface Temp — Day (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
+          <p class="figure-note">
+            Texas is consistently the hottest every month, but Iowa's more moderate
+            daytime soil temperatures push NDVI the highest.
+            <strong>Heat alone doesn't decide greenness. Crop choice and
+            moisture act as limiting factors.</strong>
+          </p>
+          <div id="scatter-lst" class="scatter-frame"></div>
+        </figure>
+
+        <figure class="scatter-card">
+          <h4>LST Night Temperature vs Vegetation</h4>
+          <p class="figure-sub">Land Surface Temp — Night (<span class="unit-text">°C</span>) on x-axis · NDVI on y-axis</p>
+          <p class="figure-note">
+            Day and Night LST track each other tightly across counties, but by plotting Night against NDVI, 
+            we see thatthe cluster grows visibly tighter.
+            <strong>Plants feel the night more than they feel the day.</strong>
+          </p>
+          <div id="scatter-lst-night" class="scatter-frame"></div>
+        </figure>
+
+        <figure class="scatter-card">
+          <h4>Rainfall vs Vegetation</h4>
+          <p class="figure-sub">Precipitation (mm) on x-axis · NDVI on y-axis</p>
+          <p class="figure-note">
+            Iowa never breaks 85 mm in any month, but its peak NDVI
+            is greater than both Kansas and Texas, which each exceed 110 mm in
+            the month with the most rainfall.
+            <strong>The type of crop is more impactful for setting the ceiling than the amount of water.</strong>
+          </p>
+          <div id="scatter-precip" class="scatter-frame"></div>
+        </figure>
+      </div>
 
       <aside class="method-note">
         <span class="note-eyebrow">A note on overlapping dots</span>
         <p>
           Every labelled bubble is placed at the exact <em>(x, y)</em> of its
-          underlying value — no jittering, no displacement. When two months
-          share nearly identical climate, their dots overlap on purpose. That
-          proximity <em>is</em> the finding: it shows the months were
-          climatologically interchangeable. Hover any bubble to read its
+          underlying value. When two months
+          share nearly identical climate, their dots overlap. This shows the months were
+          climatologically interchangeable. Hover over any bubble to read its
           exact NDVI, temperature, and precipitation.
         </p>
       </aside>
@@ -375,11 +380,9 @@
       <p class="kicker">A Hidden Variable</p>
       <h2 class="display">Crops feel the night too.</h2>
       <p class="lede">
-        Plants respire after dark. The wider the day-night gap in
-        <strong>land surface temperature</strong> — the "skin" temperature
-        MODIS reads directly off the soil and canopy, not air — the more
-        energy crops burn just to stay alive, energy that should have gone
-        into building grain or fiber. Below, each panel splits day-time LST
+        Plants respire after dark. The wider the day and night gap in
+        <strong>land surface temperature</strong>, the more
+        energy crops burn just to stay alive intead of building grain or fiber. Below, each panel splits day-time LST
         from night-time LST for every month of 2023.
       </p>
     </div>
@@ -401,9 +404,9 @@
           <h3>State averages can lie by 0.6 NDVI.</h3>
           <p>
             In April 2023, eastern Texas counties hit a near-rainforest
-            0.79 while western Texas counties never break 0.15. Reporting
-            a single state value masks a 0.64 gap inside <em>one state</em>
-            — wider than any difference between Iowa, Kansas, and Texas
+            0.79 while western Texas counties never broke 0.15. Reporting
+            a single state value masks a 0.64 gap inside <em>one state</em>. 
+            This difference is larger than any difference between Iowa, Kansas, and Texas
             as wholes.
           </p>
         </article>
@@ -411,11 +414,11 @@
           <div class="big-number">02</div>
           <h3>Temperature alone does not explain greenness.</h3>
           <p>
-            Texas is hotter than Iowa every month — yet Iowa's NDVI peaks higher.
+            Texas is consistently hotter than Iowa, but Iowa's NDVI peaks higher.
             Crop choice, the timing of rain, and even the night-time chill
-            matter as much as raw daytime heat. The same
-            <span class="temp" data-c="30">30 °C</span> means thriving corn in
-            well-watered Iowa and moisture-starved cotton across West Texas.
+            matter just as much as raw daytime heat. The same
+            <span class="temp" data-c="30">30 °C</span> result in thriving corn in
+            Iowa, who gets plenty of water and less bounfitful cotton across West Texas, which suffers from less water.
           </p>
         </article>
         <article class="takeaway-card">
@@ -426,9 +429,7 @@
             <span class="temp" data-c="20">20 °C</span> from June through
             September, denying cotton the cool hours plants use to recover.
             Iowa's nights, by contrast, average
-            <span class="temp" data-c="18">18 °C</span> even in July —
-            giving corn overnight respite that satellites quantify in
-            vivid detail.
+            <span class="temp" data-c="18">18 °C</span> even in July which gives the corn overnight which can readily be seen.
           </p>
         </article>
       </div>
@@ -437,10 +438,10 @@
         <div class="warning-eyebrow"><span class="warning-icon" aria-hidden="true">!</span> The warning</div>
         <h3 id="warning-title">Time to retire the state average.</h3>
         <p>
-          The 0.64 NDVI gap we measured inside a single Texas in April 2023
-          is not an outlier — it is what every farm state looks like
+          The 0.64 NDVI gap we measured inside the state of Texas in April 2023
+          is not an outlier, but is instead what every farm state looks like
           once you stop averaging. As climate change widens the
-          wettest-to-driest divide inside each state, that gap will
+          precipitation divide inside each state, that gap will
           only deepen. State-level reporting was an approximation born
           of measurement limits decades ago. <em>Those limits no longer
           exist.</em>
@@ -454,19 +455,19 @@
         <div>
           <h4>What we have done</h4>
           <ul>
-            <li>Pulled MODIS NDVI (MOD13A2), LST day &amp; night (MOD11A2), and CHIRPS precipitation for every county in Iowa, Kansas, and Texas for the full 2023 calendar year — all aggregated to monthly means inside Google Earth Engine.</li>
+            <li>Pulled MODIS NDVI (MOD13A2), LST day &amp; night (MOD11A2), and CHIRPS precipitation for every county in Iowa, Kansas, and Texas for the full 2023 calendar year, which were then all aggregated to monthly means inside Google Earth Engine.</li>
             <li>Built an eight-section scrollytelling page in D3.js, anchored by six interactive visualisations: a US intro map, a state-vs-county reveal, a 458-county time machine with sparkline hover, a radial crop calendar, paired scatter plots with crop-stage annotations, and a day-vs-night LST chart.</li>
-            <li>Added a site-wide <strong>°C ↔ °F toggle</strong> so American and international readers can each read in their native unit — every choropleth tick, axis label, tooltip, and inline number on the page re-renders in place, without a page reload.</li>
+            <li>Added a site-wide <strong>°C ↔ °F toggle</strong> so American and international readers can each read the data in their native unit. This updates every choropleth tick, axis label, tooltip, and inline number on the page re-renders in place, without a page reload.</li>
             <li>Authored an And-But-Therefore narrative connecting satellite observation to crop-specific lifecycle knowledge.</li>
           </ul>
         </div>
         <div>
           <h4>What was the most challenging</h4>
           <ul>
-            <li>Designing interactions that <em>reveal patterns a static plot cannot</em> — especially the per-county sparkline-on-hover, which lets readers compare one county's full-year trajectory against the regional choropleth without leaving the page.</li>
-            <li>Keeping three side-by-side maps (Iowa, Kansas, Texas) visually balanced when Texas is nearly 5× larger than Iowa: each map is independently fit to its own bounds while sharing one global color scale.</li>
-            <li>Implementing the °C/°F toggle correctly — <em>absolute temperatures</em> need the +32 offset (0 °C = 32 °F) but <em>temperature differences</em> only scale (a 21 °C gap is 38 °F, not 70 °F). The two cases live in separate API functions so a tooltip's Day, Night, and Gap rows convert independently without us silently corrupting any of them.</li>
-            <li>Writing prose that turns satellite numbers into a story a non-specialist can actually feel.</li>
+            <li>Designing interactions that <em>reveal patterns a static plot cannot</em> (especially the per-county sparkline-on-hover), which lets readers compare one county's full-year trajectory against the regional choropleth without leaving the page.</li>
+            <li>Keeping three side-by-side maps (Iowa, Kansas, Texas) visually balanced when Texas is nearly 5× larger than Iowa. This was done by having each map is independently fit to its own bounds while sharing one global color scale.</li>
+            <li>Implementing the °C/°F toggle correctly. <em>Absolute temperatures</em> need the +32 offset (0 °C = 32 °F) but <em>temperature differences</em> only scale (a 21 °C gap is 38 °F, not 70 °F). The two cases live in separate API functions so a tooltip's Day, Night, and Gap rows convert them independently.</li>
+            <li>Writing prose that turns satellite numbers into a story that someone without prior exposure to the data can understand.</li>
           </ul>
         </div>
       </div>
